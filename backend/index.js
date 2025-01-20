@@ -1,7 +1,11 @@
 const express = require("express");
 const app = express();
 var morgan = require('morgan')
+const cors = require('cors');
+// const { default: person } = require("../frontend/src/services/person");
 
+
+app.use(cors())
 
 let persons = [
   {
@@ -95,7 +99,7 @@ app.get("/api/persons/:id", (request, response) => {
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
   persons = persons.filter((person) => person.id !== id);
-
+  response.json(persons)
   response.status(204).end();
 });
 
@@ -146,7 +150,7 @@ app.post("/api/persons", (request, response) => {
 
 app.use(unknownEndpoint);
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  console.log(`Server running on port ${PORT}`)
+})
