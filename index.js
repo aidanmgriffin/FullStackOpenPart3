@@ -2,10 +2,10 @@ const express = require("express");
 const app = express();
 var morgan = require('morgan')
 const cors = require('cors');
+
 // const { default: person } = require("../frontend/src/services/person");
 
 
-app.use(cors())
 
 let persons = [
   {
@@ -34,16 +34,19 @@ const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
   console.log("Path:  ", request.path);
   console.log("Body:  ", request.body);
-//   console.log(response)
+  //   console.log(response)
   console.log("---");
   next();
 };
 
 morgan.token('body', (req, res) => {
-    return  JSON.stringify(req.body) 
+  return  JSON.stringify(req.body) 
 })
 
+
 app.use(express.json());
+app.use(cors())
+app.use(express.static('dist'))
 app.use(requestLogger);
 app.use(morgan(function(tokens, req, res) {
     let body = null
@@ -72,6 +75,10 @@ app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
 });
 
+app.get("/readme", (request, response) => {
+  response.send();
+});
+
 app.get("/info", (request, response) => {
   response.set("Date", new Date());
   response.send(
@@ -98,8 +105,9 @@ app.get("/api/persons/:id", (request, response) => {
 
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
+  const person = persons.find((person) => person.id === id);
   persons = persons.filter((person) => person.id !== id);
-  response.json(persons)
+  response.json(person)
   response.status(204).end();
 });
 
@@ -146,7 +154,6 @@ app.post("/api/persons", (request, response) => {
 
   response.json(person);
 });
-
 
 app.use(unknownEndpoint);
 
