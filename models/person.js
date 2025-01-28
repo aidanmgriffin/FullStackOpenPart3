@@ -9,9 +9,9 @@ console.log('connecting to', url)
 
 mongoose.connect(url)
 
-  .then(result => {
+  .then(
     console.log('connected to MongoDB')
-  })
+  )
   .catch(error => {
     console.log('error connecting to MongoDB:', error.message)
   })
@@ -33,7 +33,7 @@ const personSchema = new mongoose.Schema({
     minLength: [8, 'Phone number must be at least 8 characters long'],
     required: [true, 'Phone number required']
   },
-});
+})
 
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
